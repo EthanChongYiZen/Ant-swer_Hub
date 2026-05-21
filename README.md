@@ -1,31 +1,70 @@
-## README的意义
+# Ant-swer Hub
 
-README 文件通常是项目的第一个入口点。你应该通过 README 明确地告诉大家，为什么他们应该使用你的项目，以及安装和使用的方法。
+A community and support platform for WorldFirst (Ant International) merchants — built as a 48-hour hackathon MVP.
 
-如果在仅仅看文档而不看代码的情况下就可以使用你的项目，该文档就完成了。 这个非常重要，因为这将使项目的文档接口与其内部实现分开，只要接口保持不变，就可以自由更改项目的内部结构。 
+## Overview
 
-**文档，而不是代码定义了项目的使用方式。**
+Ant-swer Hub is a desktop-first web dashboard designed to integrate with the WorldFirst platform. It provides merchants with announcements, community discussion, and AI-assisted FAQ support — all running locally in the browser with zero server dependencies.
 
-一个规范的README文档能减少用户检索信息的时间。
+## Features
 
-## 标准 README
+### Authentication
+- Login / Registration toggle panel
+- Switch between **Merchant** and **Admin** roles
+- Session persists in localStorage across refreshes
 
-一个标准的README文件应当至少包含以下的内容：
+### 1. Announcements
+- Admin-controlled newsfeed with card layout
+- Seed data includes real-looking regional promos (e.g., "Fee-Free trades to Pakistan and Bangladesh")
+- Admins can **Create** and **Delete** posts instantly
+- Regular users can only read
 
-- 项目背景：说明创建本项目的背景与动机，创建本项目试图解决的问题 
-- 安装方法：说明如何快速上手使用该项目
-- 使用方法：列出本项目能够提供的功能以及使用这些功能的方法
-- 文档：现阶段antcode鼓励用户使用语雀组织项目文档，在README上应当放入项目的语雀文档链接
+### 2. Community Forum
+- Reddit-style discussion threads with nested comment replies
+- Create threads by topic: Product, Exchange Rate, Trading, General
+- Interactive poll with live vote tracking
+- Community milestone signup tracker with progress bar
 
-## 附加内容
+### 3. FAQ / Help Center
+- Chat-style AI assistant interface
+- Keyword-search fallback engine matching against a local WorldFirst Help Center dictionary
+- 1.5s pulsing loader animation ("Ant-swer AI is parsing official Help Center guidelines...")
+- Graceful fallback with admin contact links for unmatched queries
+- Clickable quick-topic chips for instant answers
 
-视项目的实际情况，同样也应该包含以下内容：
+## Color Theme (WorldFirst)
 
-- 项目特性：说明本项目相较于其他同类项目所具有的特性
-- 兼容环境：说明本项目能够在什么平台上运行
-- 使用示例：展示一些使用本项目的小demo
-- 主要项目负责人：使用“@”标注出本项目的主要负责人，方便项目的用户沟通
-- 参与贡献的方式：规定好其他用户参与本项目并贡献代码的方式
-- 项目的参与者：列出项目主要的参与人
-- 已知用户：列出已经在生产环境中使用了本项目的全部或部分组件的公司或组织
-- 赞助者：列出为本项目提供赞助的用户
+| Token | Color | Usage |
+|-------|-------|-------|
+| Primary Accent | `#f4004e` | Brand headers, action buttons, active states |
+| Main Background | `#ffffff` | Cards and content canvases |
+| Dashboard Canvas | `#f1f1f7` | Main screen layout background |
+| Typography | `#000000` | All primary text and titles |
+| Highlight Links | `#6d7be0` | Navigation states, hashtags, clickable items |
+
+## Tech Stack
+
+- Pure HTML5 / CSS3 / Vanilla JavaScript
+- Zero server — all state in `localStorage`
+- Google Fonts (Inter)
+
+## Quick Start
+
+Open `index.html` directly in any modern browser. No build step, no npm, no server.
+
+### Pre-seeded Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | `admin@worldfirst.com` | `admin123` |
+| Merchant | `rahul@trade.com` | `user123` |
+
+## Project Structure
+
+```
+Ant-swer_Hub/
+  index.html        — Main HTML (single-page app shell)
+  css/styles.css    — WorldFirst-themed stylesheet
+  js/app.js         — Application logic, state, chatbot engine
+  README.md
+```
