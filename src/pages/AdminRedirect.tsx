@@ -7,5 +7,5 @@ export default function AdminRedirect() {
   if (user.role === 'admin' || user.role === 'manager') {
     return <Navigate to="/dashboard/admin" replace />
   }
-  return <Navigate to="/dashboard/group-chat" replace />
+  return <Navigate to="/dashboard/chat" replace />
 }

@@ -32,7 +32,7 @@ export default function AIAssistantPage() {
     {
       id: '0',
       role: 'assistant',
-      content: "Hi! I'm the WorldFirst AI Assistant. I can help you with international transfers, exchange rates, fees, and account management. What can I help you with today?",
+      content: `Hi ${user?.displayName ?? 'there'}! 👋 I'm the Ant-Swer AI Assistant. I can help you with questions about transfers, exchange rates, fees, and more. What would you like to know?`,
       timestamp: new Date(),
     }
   ])
@@ -125,17 +125,29 @@ export default function AIAssistantPage() {
     }
   }
 
-  const QUICK_TOPICS = ['What are the transfer fees?', 'How do exchange rates work?', 'How long do transfers take?', 'How to open an account?']
+  const QUICK_TOPICS = [
+    'What are the transfer fees?',
+    'How long do transfers take?',
+    'What currencies do you support?',
+    'How do I verify my account?',
+    'What is a forward contract?',
+    'How do batch payments work?',
+  ]
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-3 px-6 py-4 bg-white border-b border-border">
-        <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
-          <span className="text-lg">🤖</span>
+        <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1 1 .03 2.638-1.363 2.322l-1.364-.341M5 14.5l-1.402 1.402c-1 1-.03 2.638 1.363 2.322l1.364-.341m11.474 0l-7.474 1.868-7.474-1.868" />
+          </svg>
         </div>
         <div>
-          <h1 className="font-semibold text-foreground">AI Assistant</h1>
-          <p className="text-xs text-muted-foreground">Powered by WorldFirst</p>
+          <h1 className="font-semibold text-foreground">Ant-Swer AI Assistant</h1>
+          <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" />
+            Online — Powered by GPT-4o-mini
+          </p>
         </div>
       </div>
 
@@ -143,8 +155,10 @@ export default function AIAssistantPage() {
         {messages.map(msg => (
           <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-up`}>
             {msg.role === 'assistant' && (
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-2 flex-shrink-0 self-end">
-                <span className="text-sm">🤖</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-2 flex-shrink-0 self-end">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" />
+                </svg>
               </div>
             )}
             <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} max-w-xs lg:max-w-lg`}>
@@ -163,8 +177,10 @@ export default function AIAssistantPage() {
 
         {loading && (
           <div className="flex justify-start animate-fade-in">
-            <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-2 flex-shrink-0 self-end">
-              <span className="text-sm">🤖</span>
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center mr-2 flex-shrink-0 self-end">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3" />
+              </svg>
             </div>
             <div className="bubble-other">
               <div className="flex gap-1 py-1">
@@ -180,12 +196,12 @@ export default function AIAssistantPage() {
 
       {/* Quick topics */}
       {messages.length <= 1 && (
-        <div className="px-4 pb-2 flex flex-wrap gap-2">
+        <div className="px-4 pb-2 grid grid-cols-2 gap-2">
           {QUICK_TOPICS.map(topic => (
             <button
               key={topic}
               onClick={() => { setText(topic); }}
-              className="text-xs px-3 py-1.5 rounded-full border border-primary/30 text-primary hover:bg-primary/5 transition"
+              className="text-xs px-3 py-2 rounded-xl border border-primary/30 text-primary hover:bg-primary/5 transition text-left"
             >
               {topic}
             </button>
@@ -202,7 +218,7 @@ export default function AIAssistantPage() {
               value={text}
               onChange={e => setText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything about WorldFirst…"
+              placeholder="Ask me anything about WorldFirst/Ant-Swer…"
               className="flex-1 resize-none bg-transparent text-sm outline-none max-h-32"
               style={{ minHeight: '24px' }}
             />
@@ -213,6 +229,9 @@ export default function AIAssistantPage() {
             </svg>
           </button>
         </div>
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          AI responses are for general guidance only. Contact support for account-specific queries.
+        </p>
       </div>
     </div>
   )

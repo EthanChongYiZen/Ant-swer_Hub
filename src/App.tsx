@@ -6,13 +6,14 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import SelectRegionPage from './pages/SelectRegionPage'
 import DashboardLayout from './pages/DashboardLayout'
-import GroupChatPage from './pages/GroupChatPage'
+import ChatPage from './pages/ChatPage'
 import AnnouncementsPage from './pages/AnnouncementsPage'
-import BlogPage from './pages/BlogPage'
+import ForumPage from './pages/ForumPage'
 import SupportPage from './pages/SupportPage'
 import AIAssistantPage from './pages/AIAssistantPage'
 import AdminPage from './pages/AdminPage'
 import AdminRedirect from './pages/AdminRedirect'
+import ProfilePage from './pages/ProfilePage'
 
 export default function App() {
   return (
@@ -29,12 +30,16 @@ export default function App() {
               <Route element={<RequireRegion />}>
                 <Route path="/dashboard" element={<DashboardLayout />}>
                   <Route index element={<AdminRedirect />} />
-                  <Route path="group-chat" element={<GroupChatPage />} />
+                  <Route path="chat" element={<ChatPage />} />
                   <Route path="announcements" element={<AnnouncementsPage />} />
-                  <Route path="blog" element={<BlogPage />} />
+                  <Route path="forum" element={<ForumPage />} />
                   <Route path="support" element={<SupportPage />} />
                   <Route path="ai-assistant" element={<AIAssistantPage />} />
                   <Route path="admin" element={<AdminPage />} />
+                  <Route path="profile" element={<ProfilePage />} />
+                  {/* Legacy redirect for old group-chat and blog URLs */}
+                  <Route path="group-chat" element={<Navigate to="/dashboard/chat" replace />} />
+                  <Route path="blog" element={<Navigate to="/dashboard/forum" replace />} />
                 </Route>
               </Route>
             </Route>

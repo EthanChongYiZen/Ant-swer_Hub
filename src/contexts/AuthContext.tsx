@@ -6,10 +6,12 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
+  updatePassword,
   type User as FirebaseUser,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
-import { auth, db, googleProvider } from '../lib/firebase'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { auth, db, storage, googleProvider } from '../lib/firebase'
 
 export interface AppUser {
   uid: string
@@ -28,6 +30,8 @@ interface AuthContextValue {
   loginWithGoogle: () => Promise<void>
   logout: () => Promise<void>
   updateUserRegion: (region: string) => Promise<void>
+  updateUserProfile: (data: { displayName?: string; photoFile?: File }) => Promise<void>
+  changePassword: (newPassword: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -37,8 +41,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   async function fetchOrCreateUser(firebaseUser: FirebaseUser): Promise<AppUser> {
-    const ref = doc(db, 'users', firebaseUser.uid)
-    const snap = await getDoc(ref)
+    const ref2 = doc(db, 'users', firebaseUser.uid)
+    const snap = await getDoc(ref2)
     if (snap.exists()) {
       const data = snap.data()
       return {
@@ -58,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         region: null,
         role: 'user',
       }
-      await setDoc(ref, { ...newUser, createdAt: serverTimestamp() })
+      await setDoc(ref2, { ...newUser, createdAt: serverTimestamp() })
       return newUser
     }
   }
@@ -92,6 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       role: 'user',
       createdAt: serverTimestamp(),
     })
+    // Immediately update local state so displayName shows right after registration
+    setUser({ uid: cred.user.uid, email, displayName: name, photoURL: null, region: null, role: 'user' })
   }
 
   async function loginWithGoogle() {
@@ -108,8 +114,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser({ ...user, region })
   }
 
+  async function updateUserProfile(data: { displayName?: string; photoFile?: File }) {
+    if (!user || !auth.currentUser) return
+    let photoURL = user.photoURL
+    if (data.photoFile) {
+      // Use a fixed path (avatar.jpg) so the URL stays stable and cache-busting isn't needed
+      const storageRef = ref(storage, `avatars/${user.uid}/avatar.jpg`)
+      const task = uploadBytesResumable(storageRef, data.photoFile)
+      await new Promise<void>((resolve, reject) => task.on('state_changed', null, reject, resolve))
+      // Append cache-buster so all clients immediately see the new photo
+      const base = await getDownloadURL(storageRef)
+      photoURL = base.includes('?') ? `${base}&v=${Date.now()}` : `${base}?v=${Date.now()}`
+    }
+    const updates: Record<string, string | null> = {}
+    if (data.displayName) updates.displayName = data.displayName
+    if (photoURL !== user.photoURL) updates.photoURL = photoURL
+    if (Object.keys(updates).length > 0) {
+      await updateProfile(auth.currentUser, updates)
+      await updateDoc(doc(db, 'users', user.uid), updates)
+      setUser({ ...user, ...updates })
+    }
+  }
+
+  async function changePassword(newPassword: string) {
+    if (!auth.currentUser) return
+    await updatePassword(auth.currentUser, newPassword)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, loginWithGoogle, logout, updateUserRegion }}>
+    <AuthContext.Provider value={{ user, loading, login, register, loginWithGoogle, logout, updateUserRegion, updateUserProfile, changePassword }}>
       {children}
     </AuthContext.Provider>
   )

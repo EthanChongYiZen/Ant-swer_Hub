@@ -40,16 +40,19 @@ export default function LoginPage() {
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex items-center gap-2 mb-8 justify-center">
+        <div className="flex items-center gap-2 mb-2 justify-center">
           <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
             <span className="text-white font-bold text-lg">A</span>
           </div>
           <span className="text-2xl font-bold text-foreground">Ant-Swer</span>
         </div>
+        <p className="text-center text-sm text-muted-foreground mb-8">Global Community</p>
 
         <div className="card p-8">
-          <h1 className="text-xl font-semibold text-foreground mb-1">Welcome back</h1>
-          <p className="text-sm text-muted-foreground mb-6">Sign in to your WorldFirst account</p>
+          <h1 className="text-xl font-semibold text-foreground mb-1">Sign in</h1>
+          <p className="text-sm text-muted-foreground mb-6">Don't have an account?{' '}
+            <Link to="/register" className="text-primary font-medium hover:underline">Sign up free</Link>
+          </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -64,7 +67,10 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Password</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium text-foreground">Password</label>
+                <button type="button" className="text-xs text-primary hover:underline">Forgot password?</button>
+              </div>
               <input
                 type="password"
                 className="input-wf"
@@ -81,7 +87,7 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted-foreground">or</span>
+            <span className="text-xs text-muted-foreground">or continue with</span>
             <div className="flex-1 h-px bg-border" />
           </div>
 
@@ -99,9 +105,10 @@ export default function LoginPage() {
             Continue with Google
           </button>
 
-          <p className="text-center text-sm text-muted-foreground mt-6">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-primary font-medium hover:underline">Sign up</Link>
+          <p className="text-center text-xs text-muted-foreground mt-6">
+            By signing in, you agree to Ant-Swer's{' '}
+            <span className="text-primary hover:underline cursor-pointer">Terms of Service</span> and{' '}
+            <span className="text-primary hover:underline cursor-pointer">Privacy Policy</span>
           </p>
         </div>
       </div>

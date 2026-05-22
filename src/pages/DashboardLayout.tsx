@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { REGION_FLAGS } from '../lib/utils'
 import Avatar from '../components/Avatar'
@@ -21,10 +21,10 @@ function MegaphoneIcon() {
     </svg>
   )
 }
-function BlogIcon() {
+function ForumIcon() {
   return (
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
     </svg>
   )
 }
@@ -46,6 +46,13 @@ function ChartIcon() {
   return (
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    </svg>
+  )
+}
+function UserIcon() {
+  return (
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
     </svg>
   )
 }
@@ -100,7 +107,6 @@ function NavItem({ to, icon, label, end, onClick }: NavItemProps) {
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
-  const [showLogout, setShowLogout] = useState(false)
   const isAdmin = user?.role === 'admin' || user?.role === 'manager'
 
   async function handleLogout() {
@@ -115,7 +121,10 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
           <span className="text-white font-bold text-base">A</span>
         </div>
-        <span className="text-lg font-bold text-gray-800">Ant-Swer</span>
+        <div>
+          <span className="text-lg font-bold text-gray-800">Ant-Swer</span>
+          {isAdmin && <span className="text-xs text-muted-foreground ml-1">Admin Console</span>}
+        </div>
         {onClose && (
           <button onClick={onClose} className="ml-auto text-gray-500 hover:text-gray-800 p-1">
             <XIcon />
@@ -138,51 +147,51 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
         ) : null}
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 pb-4 overflow-y-auto space-y-0.5">
-        {/* Community section */}
-        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest px-3 pt-2 pb-1">Community</p>
-        <NavItem to="/dashboard/group-chat" icon={<ChatIcon />} label="Group Chat" onClick={onClose} />
+      {/* Nav — unified, no section separators */}
+      <nav className="flex-1 px-3 pb-2 overflow-y-auto space-y-0.5">
+        <NavItem to="/dashboard/chat" icon={<ChatIcon />} label="Chat" onClick={onClose} />
         <NavItem to="/dashboard/announcements" icon={<MegaphoneIcon />} label="Announcements" onClick={onClose} />
-        <NavItem to="/dashboard/blog" icon={<BlogIcon />} label="Posts" onClick={onClose} />
+        <NavItem to="/dashboard/forum" icon={<ForumIcon />} label="Discussion Forum" onClick={onClose} />
         <NavItem to="/dashboard/support" icon={<SupportIcon />} label="Support Chat" onClick={onClose} />
         <NavItem to="/dashboard/ai-assistant" icon={<BotIcon />} label="AI Assistant" onClick={onClose} />
 
         {/* Admin section */}
         {isAdmin && (
           <>
-            <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest px-3 pt-4 pb-1">Admin Panel</p>
-            <NavItem to="/dashboard/admin" end icon={<ChartIcon />} label="Overview" onClick={onClose} />
-            <NavItem to="/dashboard/admin?tab=announcements" icon={<MegaphoneIcon />} label="Announcements" onClick={onClose} />
-            <NavItem to="/dashboard/admin?tab=support" icon={<SupportIcon />} label="Support Inbox" onClick={onClose} />
-            <NavItem to="/dashboard/admin?tab=group-chat" icon={<ChatIcon />} label="Group Chat" onClick={onClose} />
+            <div className="h-px bg-gray-200 my-2" />
+            <NavItem to="/dashboard/admin" end icon={<ChartIcon />} label="Admin Panel" onClick={onClose} />
           </>
         )}
       </nav>
 
-      {/* User footer */}
-      <div
-        className="border-t border-gray-200 px-3 py-3 relative"
-        onMouseEnter={() => setShowLogout(true)}
-        onMouseLeave={() => setShowLogout(false)}
-      >
-        <div className="flex items-center gap-2.5 rounded-xl p-2 hover:bg-gray-100 cursor-default transition">
+      {/* Bottom: profile link + static logout */}
+      <div className="border-t border-gray-200 px-3 py-3">
+        {/* Profile bar — clicking navigates to profile page */}
+        <Link
+          to="/dashboard/profile"
+          onClick={onClose}
+          className="flex items-center gap-2.5 rounded-xl px-2 py-2 hover:bg-gray-100 transition w-full"
+        >
           <Avatar name={user?.displayName} photoURL={user?.photoURL} size="sm" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-gray-800 truncate">{user?.displayName ?? 'User'}</p>
             <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
           </div>
-        </div>
-        {showLogout && (
-          <div className="absolute bottom-full left-3 right-3 mb-1 animate-fade-in">
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-3 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-xl transition font-medium bg-white border border-border shadow-card"
-            >
-              Sign out
-            </button>
-          </div>
-        )}
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="text-gray-400 flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+
+        {/* Static sign out button */}
+        <button
+          onClick={handleLogout}
+          className="mt-1 w-full flex items-center gap-2.5 px-2 py-2 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition"
+        >
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="flex-shrink-0">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Sign out
+        </button>
       </div>
     </div>
   )
@@ -193,11 +202,6 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 export default function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
-
-  // Close mobile sidebar on route change
-  useState(() => {
-    setMobileOpen(false)
-  })
 
   return (
     <div className="flex h-screen bg-surface overflow-hidden">
