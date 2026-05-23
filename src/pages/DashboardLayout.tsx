@@ -227,9 +227,7 @@ export default function DashboardLayout() {
             <MenuIcon />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
-            </div>
+            <img src={antIcon} alt="Ant-Swer" className="w-7 h-7 rounded-lg object-cover" />
             <span className="font-bold text-gray-800">Ant-Swer</span>
           </div>
         </div>

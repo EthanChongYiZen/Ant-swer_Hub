@@ -103,9 +103,7 @@ export default function RegisterPage() {
 
           {/* Mobile-only logo */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-base">A</span>
-            </div>
+            <img src={antIcon} alt="Ant-Swer" className="w-8 h-8 rounded-xl object-cover" />
             <span className="text-xl font-bold text-foreground">Ant-Swer</span>
           </div>
 
