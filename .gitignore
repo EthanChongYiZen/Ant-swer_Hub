@@ -1,6 +1,11 @@
 node_modules
+node_modules/
+ant-swer/node_modules/
 dist
+ant-swer/dist/
 .env
 .env.local
 .DS_Store
 .vercel
+.qoder/
+*.log
