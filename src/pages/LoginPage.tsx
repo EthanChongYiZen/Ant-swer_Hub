@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/toast'
+import antIcon from '../assets/ant-icon.jpg'
 
 export default function LoginPage() {
   const { login, loginWithGoogle } = useAuth()
@@ -55,9 +56,7 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div className="relative flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-base">A</span>
-          </div>
+          <img src={antIcon} alt="Ant-Swer" className="w-8 h-8 rounded-xl object-cover flex-shrink-0" />
           <div>
             <span className="text-white font-bold text-base leading-none">Ant-Swer</span>
             <p className="text-white/50 text-[10px] leading-none mt-0.5">Global Community</p>
@@ -98,9 +97,7 @@ export default function LoginPage() {
 
           {/* Mobile-only logo */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-base">A</span>
-            </div>
+            <img src={antIcon} alt="Ant-Swer" className="w-8 h-8 rounded-xl object-cover" />
             <span className="text-xl font-bold text-foreground">Ant-Swer</span>
           </div>
 
