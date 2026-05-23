@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { REGION_FLAGS } from '../lib/utils'
 import Avatar from '../components/Avatar'
 import { cn } from '../lib/utils'
+import logo from '../assets/logo.png'
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 
@@ -117,14 +118,9 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-4 py-5 border-b border-gray-200">
-        <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold text-base">A</span>
-        </div>
-        <div>
-          <span className="text-lg font-bold text-gray-800">Ant-Swer</span>
-          {isAdmin && <span className="text-xs text-muted-foreground ml-1">Admin Console</span>}
-        </div>
+      <div className="flex items-center gap-2 px-4 py-4 border-b border-gray-200">
+        <img src={logo} alt="Ant-swer Hub" className="h-8 w-auto object-contain flex-shrink-0" />
+        {isAdmin && <span className="text-xs text-muted-foreground ml-1">Admin Console</span>}
         {onClose && (
           <button onClick={onClose} className="ml-auto text-gray-500 hover:text-gray-800 p-1">
             <XIcon />
