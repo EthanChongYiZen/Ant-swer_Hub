@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/ui/toast'
-import logo from '../assets/logo.png'
 
 export default function RegisterPage() {
   const { register, loginWithGoogle } = useAuth()
@@ -46,8 +45,11 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        <div className="flex justify-center mb-2">
-          <img src={logo} alt="Ant-swer Hub" className="h-16 w-auto object-contain" />
+        <div className="flex items-center gap-2 mb-2 justify-center">
+          <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
+            <span className="text-white font-bold text-lg">A</span>
+          </div>
+          <span className="text-2xl font-bold text-foreground">Ant-Swer</span>
         </div>
         <p className="text-center text-sm text-muted-foreground mb-8">Global Community</p>
 
