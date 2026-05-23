@@ -4,67 +4,182 @@ A community and support platform for WorldFirst (Ant International) merchants �
 
 ## Overview
 
-Ant-swer Hub is a desktop-first web dashboard designed to integrate with the WorldFirst platform. It provides merchants with announcements, community discussion, and AI-assisted FAQ support — all running locally in the browser with zero server dependencies.
+Ant-swer Hub is a full-stack web dashboard that connects WorldFirst merchants across regions. It provides real-time announcements, community discussion, direct messaging, group chat, and an AI-powered assistant — all backed by Firebase and deployable to Vercel in one command.
+
+## Live Demo
+
+[https://ant-swer-nu.vercel.app](https://ant-swer-nu.vercel.app)
+
+---
 
 ## Features
 
 ### Authentication
-- Login / Registration toggle panel
-- Switch between **Merchant** and **Admin** roles
-- Session persists in localStorage across refreshes
+- Email/password registration and login
+- Google Sign-In (OAuth)
+- Role-based access: **Merchant** and **Admin**
+- Region selection on first login (MY, CN, SG, HK, and more)
+- Protected routes — unauthenticated users redirected to login
 
-### 1. Announcements
-- Admin-controlled newsfeed with card layout
-- Seed data includes real-looking regional promos (e.g., "Fee-Free trades to Pakistan and Bangladesh")
-- Admins can **Create** and **Delete** posts instantly
-- Regular users can only read
+### Announcements
+- Admin-published announcements with multi-region targeting
+- Region flag indicators per announcement
+- Full-width feed filtered by the logged-in user's region
+- Supports both single-region (legacy) and multi-region posts
 
-### 2. Community Forum
-- Reddit-style discussion threads with nested comment replies
-- Create threads by topic: Product, Exchange Rate, Trading, General
-- Interactive poll with live vote tracking
-- Community milestone signup tracker with progress bar
+### Community Forum
+- Create posts as **Discussion**, **Poll**, or **Event**
+- Multi-select region targeting per post
+- Image attachments on posts (uploaded to Firebase Storage)
+- Nested comment replies with author avatars
+- Filter posts by region with multi-select dropdown
+- Like / vote interactions
 
-### 3. FAQ / Help Center
-- Chat-style AI assistant interface
-- Keyword-search fallback engine matching against a local WorldFirst Help Center dictionary
-- 1.5s pulsing loader animation ("Ant-swer AI is parsing official Help Center guidelines...")
-- Graceful fallback with admin contact links for unmatched queries
-- Clickable quick-topic chips for instant answers
+### Direct Messages (DM)
+- 1-to-1 real-time chat with any contact
+- Add contacts and remove them (with message history cleanup)
+- Deterministic channel IDs — no duplicate channels
+- Ideal for coordinating cross-border L2L transfers (e.g. MY ↔ CN)
 
-## Color Theme (WorldFirst)
+### Group Chat
+- Real-time group messaging channel
+- Message timestamps and user avatars
 
-| Token | Color | Usage |
-|-------|-------|-------|
-| Primary Accent | `#f4004e` | Brand headers, action buttons, active states |
-| Main Background | `#ffffff` | Cards and content canvases |
-| Dashboard Canvas | `#f1f1f7` | Main screen layout background |
-| Typography | `#000000` | All primary text and titles |
-| Highlight Links | `#6d7be0` | Navigation states, hashtags, clickable items |
+### AI Assistant
+- Conversational chat interface powered by **DeepSeek API** (`deepseek-chat`)
+- OpenAI-compatible REST format — easy to swap models
+- Falls back to keyword-based mock responses when no API key is set
+- Quick-topic chips for common merchant queries
+
+### Admin Panel
+- **Announcements tab** — create, target by region, delete
+- **Forum tab** — create posts with image upload and progress indicator
+- **Support tab** — view and respond to merchant support tickets
+
+---
 
 ## Tech Stack
 
-- Pure HTML5 / CSS3 / Vanilla JavaScript
-- Zero server — all state in `localStorage`
-- Google Fonts (Inter)
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 + TypeScript |
+| Build tool | Vite |
+| Styling | Tailwind CSS v3 |
+| Database | Firebase Firestore |
+| Auth | Firebase Authentication |
+| File storage | Firebase Storage |
+| AI | DeepSeek API (`deepseek-chat`) |
+| Hosting | Vercel |
 
-## Quick Start
+---
 
-Open `index.html` directly in any modern browser. No build step, no npm, no server.
+## Getting Started
 
-### Pre-seeded Accounts
+### Prerequisites
+- Node.js 18+
+- npm
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | `admin@worldfirst.com` | `admin123` |
-| Merchant | `rahul@trade.com` | `user123` |
+### Install dependencies
+
+```bash
+cd ant-swer
+npm install
+```
+
+### Configure environment variables
+
+Create a `.env` file in the `ant-swer/` directory:
+
+```env
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_DEEPSEEK_API_KEY=sk-your_deepseek_key
+```
+
+### Run locally
+
+```bash
+npm run dev
+```
+
+### Build for production
+
+```bash
+npm run build
+```
+
+---
+
+## Deployment (Vercel)
+
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+Add all `VITE_` environment variables in your Vercel project settings under **Settings → Environment Variables**.
+
+> **Note:** For Google Sign-In to work on the live domain, add your Vercel URL to Firebase Console → Authentication → Authorized Domains.
+
+---
 
 ## Project Structure
 
 ```
-Ant-swer_Hub/
-  index.html        — Main HTML (single-page app shell)
-  css/styles.css    — WorldFirst-themed stylesheet
-  js/app.js         — Application logic, state, chatbot engine
-  README.md
+ant-swer/
+├── src/
+│   ├── assets/
+│   │   └── ant-icon.jpg          # Brand icon
+│   ├── components/
+│   │   ├── Avatar.tsx
+│   │   ├── Guards.tsx            # Route protection
+│   │   └── ui/
+│   │       └── toast.tsx         # Toast notification system
+│   ├── contexts/
+│   │   └── AuthContext.tsx       # Firebase auth state
+│   ├── lib/
+│   │   ├── firebase.ts           # Firebase SDK init
+│   │   └── utils.ts
+│   ├── pages/
+│   │   ├── LoginPage.tsx
+│   │   ├── RegisterPage.tsx
+│   │   ├── DashboardLayout.tsx
+│   │   ├── AnnouncementsPage.tsx
+│   │   ├── ForumPage.tsx
+│   │   ├── ChatPage.tsx          # Direct Messages
+│   │   ├── GroupChatPage.tsx
+│   │   ├── AIAssistantPage.tsx
+│   │   ├── AdminPage.tsx
+│   │   ├── BlogPage.tsx
+│   │   ├── SupportPage.tsx
+│   │   └── SelectRegionPage.tsx
+│   ├── App.tsx                   # Routes
+│   └── main.tsx
+├── index.html
+├── tailwind.config.js
+├── vite.config.ts
+├── tsconfig.json
+└── vercel.json
 ```
+
+---
+
+## Future Improvements
+
+- **Streaming AI responses** — use `stream: true` with DeepSeek for real-time token output
+- **Multi-turn AI conversations** — pass full message history for context-aware chat
+- **DeepSeek Reasoner (R1)** — upgrade model for complex trade/compliance queries
+- **Backend API proxy** — move DeepSeek calls server-side to protect the API key
+- **Push notifications** — Firebase Cloud Messaging for new DMs and announcements
+- **Rate limiting** — per-user API usage tracking in Firestore
+- **Mobile app** — React Native port using the same Firebase backend
+
+---
+
+## License
+
+See [LEGAL.md](./LEGAL.md) for licensing information.
