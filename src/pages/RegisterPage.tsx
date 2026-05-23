@@ -43,25 +43,86 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
-        <div className="flex items-center gap-2 mb-2 justify-center">
-          <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-lg">A</span>
-          </div>
-          <span className="text-2xl font-bold text-foreground">Ant-Swer</span>
-        </div>
-        <p className="text-center text-sm text-muted-foreground mb-8">Global Community</p>
+    <div className="min-h-screen flex">
+      {/* ── Left panel ─────────────────────────────────────────────── */}
+      <div
+        className="hidden lg:flex lg:w-1/2 flex-col justify-between p-10 relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #6b0f1a 0%, #1a0305 50%, #0d0d0d 100%)',
+        }}
+      >
+        {/* Subtle radial glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at 20% 50%, rgba(244,0,78,0.15) 0%, transparent 60%)',
+          }}
+        />
 
-        <div className="card p-8">
-          <h1 className="text-xl font-semibold text-foreground mb-1">Create your account</h1>
-          <p className="text-sm text-muted-foreground mb-6">Already have an account?{' '}
-            <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
+        {/* Logo */}
+        <div className="relative flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-bold text-base">A</span>
+          </div>
+          <div>
+            <span className="text-white font-bold text-base leading-none">Ant-Swer</span>
+            <p className="text-white/50 text-[10px] leading-none mt-0.5">Global Community</p>
+          </div>
+        </div>
+
+        {/* Headline */}
+        <div className="relative">
+          <h1 className="text-4xl font-bold text-white leading-tight mb-4">
+            Start Your Journey<br />with Us Today.
+          </h1>
+          <p className="text-white/60 text-sm leading-relaxed max-w-xs">
+            Create your free account and join thousands of merchants growing their business
+            across borders with WorldFirst.
+          </p>
+        </div>
+
+        {/* Feature bullets */}
+        <div className="relative space-y-3">
+          {[
+            { icon: '🌍', text: 'Connect with merchants in your region' },
+            { icon: '💡', text: 'Get answers from our AI assistant' },
+            { icon: '🚀', text: 'Access exclusive campaigns & promotions' },
+          ].map(({ icon, text }) => (
+            <div key={text} className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs flex-shrink-0">
+                {icon}
+              </div>
+              <span className="text-white/70 text-sm">{text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Right panel ────────────────────────────────────────────── */}
+      <div className="flex-1 flex items-center justify-center bg-white px-6 py-12">
+        <div className="w-full max-w-sm">
+
+          {/* Mobile-only logo */}
+          <div className="flex items-center gap-2 mb-8 lg:hidden">
+            <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-base">A</span>
+            </div>
+            <span className="text-xl font-bold text-foreground">Ant-Swer</span>
+          </div>
+
+          <h2 className="text-2xl font-bold text-foreground mb-1">Create your account</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            Already have an account?{' '}
+            <Link to="/login" className="text-primary font-semibold hover:underline">
+              Sign in
+            </Link>
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Full name
+              </label>
               <input
                 type="text"
                 className="input-wf"
@@ -71,8 +132,11 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Email Address</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Email address
+              </label>
               <input
                 type="email"
                 className="input-wf"
@@ -82,8 +146,11 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Password</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Password
+              </label>
               <input
                 type="password"
                 className="input-wf"
@@ -93,21 +160,26 @@ export default function RegisterPage() {
                 required
               />
             </div>
-            <button type="submit" className="btn-primary w-full" disabled={loading}>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 transition disabled:opacity-60"
+            >
               {loading ? 'Creating account…' : 'Create Account'}
             </button>
           </form>
 
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px bg-border" />
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-200" />
             <span className="text-xs text-muted-foreground">or continue with</span>
-            <div className="flex-1 h-px bg-border" />
+            <div className="flex-1 h-px bg-gray-200" />
           </div>
 
           <button
             onClick={handleGoogle}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 border border-border rounded-xl px-4 py-2 text-sm font-medium text-foreground hover:bg-gray-50 transition disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-medium text-foreground hover:bg-gray-50 transition disabled:opacity-50"
           >
             <svg width="18" height="18" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -120,7 +192,8 @@ export default function RegisterPage() {
 
           <p className="text-center text-xs text-muted-foreground mt-6">
             By signing up, you agree to Ant-Swer's{' '}
-            <span className="text-primary hover:underline cursor-pointer">Terms of Service</span> and{' '}
+            <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>
+            {' '}and{' '}
             <span className="text-primary hover:underline cursor-pointer">Privacy Policy</span>
           </p>
         </div>
