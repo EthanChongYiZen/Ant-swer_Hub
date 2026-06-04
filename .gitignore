@@ -27,5 +27,6 @@ ant-swer/dist/
 # Logs
 *.log
 
-# Duplicate root-level src (actual source is in ant-swer/src)
+# Duplicate root-level files (actual source is in ant-swer/)
 /src/
+/index.html
