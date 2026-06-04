@@ -30,3 +30,15 @@ ant-swer/dist/
 # Duplicate root-level files (actual source is in ant-swer/)
 /src/
 /index.html
+/package.json
+/package-lock.json
+/postcss.config.js
+/tailwind.config.js
+/tsconfig.json
+/vercel.json
+/vite.config.ts
+/README.md
+/LEGAL.md
+
+# UI screenshots (not referenced in code)
+/*.png
