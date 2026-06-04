@@ -37,8 +37,6 @@ ant-swer/dist/
 /tsconfig.json
 /vercel.json
 /vite.config.ts
-/README.md
-/LEGAL.md
 
 # UI screenshots (not referenced in code)
 /*.png

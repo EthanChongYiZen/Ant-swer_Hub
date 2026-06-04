@@ -46,8 +46,7 @@ Ant-swer Hub is a full-stack web dashboard that connects WorldFirst merchants ac
 - Message timestamps and user avatars
 
 ### AI Assistant
-- Conversational chat interface powered by **DeepSeek API** (`deepseek-chat`)
-- OpenAI-compatible REST format — easy to swap models
+- Conversational chat interface powered by **Google Gemini API** (`gemini-2.5-flash`)
 - Falls back to keyword-based mock responses when no API key is set
 - Quick-topic chips for common merchant queries
 
@@ -68,7 +67,7 @@ Ant-swer Hub is a full-stack web dashboard that connects WorldFirst merchants ac
 | Database | Firebase Firestore |
 | Auth | Firebase Authentication |
 | File storage | Firebase Storage |
-| AI | DeepSeek API (`deepseek-chat`) |
+| AI | Google Gemini API (`gemini-2.5-flash`) |
 | Hosting | Vercel |
 
 ---
@@ -97,7 +96,7 @@ VITE_FIREBASE_PROJECT_ID=your_project_id
 VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
-VITE_DEEPSEEK_API_KEY=sk-your_deepseek_key
+VITE_GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### Run locally
@@ -170,10 +169,9 @@ ant-swer/
 
 ## Future Improvements
 
-- **Streaming AI responses** — use `stream: true` with DeepSeek for real-time token output
+- **Streaming AI responses** — use server-sent events with Gemini for real-time token output
 - **Multi-turn AI conversations** — pass full message history for context-aware chat
-- **DeepSeek Reasoner (R1)** — upgrade model for complex trade/compliance queries
-- **Backend API proxy** — move DeepSeek calls server-side to protect the API key
+- **Backend API proxy** — move Gemini calls server-side to protect the API key
 - **Push notifications** — Firebase Cloud Messaging for new DMs and announcements
 - **Rate limiting** — per-user API usage tracking in Firestore
 - **Mobile app** — React Native port using the same Firebase backend
@@ -182,4 +180,4 @@ ant-swer/
 
 ## License
 
-See [LEGAL.md](./LEGAL.md) for licensing information.
+See [LEGAL.md](../LEGAL.md) for licensing information.
