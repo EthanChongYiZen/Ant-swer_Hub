@@ -3,9 +3,29 @@ node_modules/
 ant-swer/node_modules/
 dist
 ant-swer/dist/
+
+# Environment variables (contains API keys)
 .env
 .env.local
+**/.env
+**/.env.local
+
+# OS files
 .DS_Store
+
+# Vercel temp/build files
 .vercel
+.vercel-tmp/
+**/.vercel-tmp/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Qoder AI
 .qoder/
+
+# Logs
 *.log
+
+# Duplicate root-level src (actual source is in ant-swer/src)
+/src/

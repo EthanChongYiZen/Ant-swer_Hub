@@ -57,7 +57,7 @@ export default function AIAssistantPage() {
     setText('')
     setLoading(true)
 
-    const apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_DEEPSEEK_API_KEY
 
     if (!apiKey) {
       // Mock fallback
@@ -73,32 +73,119 @@ export default function AIAssistantPage() {
       return
     }
 
+    const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY
+    const useGemini = !!geminiApiKey
+
     try {
-      const history = [...messages, userMsg].map(m => ({
-        role: m.role as 'user' | 'assistant' | 'system',
-        content: m.content,
-      }))
+      const systemPrompt = `You are a helpful AI assistant for WorldFirst (Ant-Swer), an international payments platform by Ant International. Help merchants with: international transfers, exchange rates, fees, account management, compliance, and payment solutions. Be concise, friendly, and professional. If asked about something outside WorldFirst's scope, politely redirect.
 
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            {
-              role: 'system',
-              content: "You are a helpful AI assistant for WorldFirst, an international payments platform by Ant International. Help merchants with: international transfers, exchange rates, fees, account management, compliance, and payment solutions. Be concise, friendly, and professional. If asked about something outside WorldFirst's scope, politely redirect.",
-            },
-            ...history,
-          ],
-        }),
-      })
+Here is key information from the WorldFirst Help Center (https://www.worldfirst.com/my/help-center/) that you should use when answering questions:
 
-      const data = await response.json()
-      const content = data.choices?.[0]?.message?.content ?? 'Sorry, I could not process your request.'
+## Account & Onboarding
+- It is FREE to open a WorldFirst account. No monthly fees.
+- Onboarding requirements: Main applicant's government-issued ID, facial recognition verification, company registration certificate, government ID for every stakeholder controlling 25%+ equity, complete director roster.
+- Additional documents may be requested: Shareholding structure, Certificate of Incumbency/Articles of Association, Proof of Trading (commercial contracts, invoices, transaction records), Proof of Address (utility statements, leases, official correspondence).
+- Verification typically takes 1-3 business days.
+- Upload all documents directly to the designated portal.
+
+## Sending Money
+- You can make free and instant payments to other WorldFirst users.
+- Send to external bank accounts, personal accounts, or other platform profiles.
+- Supports scheduled, batch, and automated transfers.
+- Dedicated workflows for Chinese supplier payouts.
+- UK entities may use direct debits for account funding.
+
+## Supported Currencies
+- USD, CAD, CNH, HKD, SGD, GBP, EUR, AUD, NZD, JPY, AED, CHF, CZK, SAR, MXN, PLN and several others.
+- Exact availability depends on registration jurisdiction.
+
+## Receiving Money
+- You can open up to 20 receiving accounts and collect funds without needing an overseas bank account.
+- Receiving marketplace revenue is FREE.
+- Incoming funds arrive through standard banking channels.
+- Account funding must come from a bank account matching the WorldFirst ownership.
+- Security protocols may trigger verification requests. During review, funds remain as "Unavailable" until cleared, typically within 1 business day.
+- Pre-register payers to avoid processing delays.
+
+## Exchange Rates & Fees
+- WorldFirst's margin on major currencies is up to 0.15% — significantly cheaper than banks.
+- No receiving fees for marketplace revenue.
+- Transfer fees vary by currency pair and amount. Check your account dashboard for exact fees.
+- Exchange rates are updated in real-time and are highly competitive.
+- Lock in a rate using forward contracts feature.
+
+## Transfer Limits
+- Transfer limits vary by account type and verification level.
+- Standard accounts can send up to $250,000 per transfer.
+- Higher limits available with enhanced verification.
+
+## World Card
+- Available for business account holders.
+- Set card limits and view card details through the platform.
+
+## Account Security
+- Two-factor authentication available.
+- Role-based access control for team management.
+- Create roles and manage user permissions from the platform.
+
+If you don't know the answer to a specific question, direct the user to the WorldFirst Help Center at https://www.worldfirst.com/my/help-center/ or suggest contacting support.`
+
+      let content: string
+
+      if (useGemini) {
+        // Google Gemini API
+        const contents = [...messages, userMsg].map(m => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }],
+        }))
+
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              system_instruction: { parts: [{ text: systemPrompt }] },
+              contents,
+            }),
+          }
+        )
+
+        const data = await response.json()
+        if (data.error) {
+          content = `API Error: ${data.error.message || 'Unknown error'}. Please try again.`
+        } else {
+          content = data.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Sorry, I could not process your request.'
+        }
+      } else {
+        // DeepSeek API (fallback)
+        const history = [...messages, userMsg].map(m => ({
+          role: m.role as 'user' | 'assistant' | 'system',
+          content: m.content,
+        }))
+
+        const response = await fetch('https://api.deepseek.com/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...history,
+            ],
+          }),
+        })
+
+        const data = await response.json()
+        if (data.error) {
+          content = `API Error: ${data.error.message || 'Unknown error'}. Please try again.`
+        } else {
+          content = data.choices?.[0]?.message?.content ?? 'Sorry, I could not process your request.'
+        }
+      }
 
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
@@ -146,7 +233,7 @@ export default function AIAssistantPage() {
           <h1 className="font-semibold text-foreground">Ant-Swer AI Assistant</h1>
           <p className="text-xs text-muted-foreground flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" />
-            Online — Powered by DeepSeek
+            Online — Powered by {import.meta.env.VITE_GEMINI_API_KEY ? 'Gemini' : 'DeepSeek'}
           </p>
         </div>
       </div>
